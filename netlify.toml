@@ -1,0 +1,9 @@
+[build]
+  command = "npm run build"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# O plugin @netlify/plugin-nextjs (runtime OpenNext) é detectado e instalado
+# automaticamente pela Netlify ao identificar um projeto Next.js — não precisa
+# declarar nem instalar manualmente.

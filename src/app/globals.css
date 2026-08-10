@@ -1,0 +1,109 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #f5f4f1;
+  --surface: #ffffff;
+  --surface-2: #eceae6;
+  --text: #1c1d1f;
+  --text-dim: #6b6d72;
+  --border: #dedcd7;
+  --grid-line: rgba(28, 29, 31, 0.07);
+  --accent: #2e7d6b;
+  --accent-text: #ffffff;
+  --today: #e8483a;
+  --danger: #c6433a;
+  --danger-bg: rgba(198, 67, 58, 0.1);
+  --ok: #2f7a3d;
+  --ok-bg: rgba(47, 122, 61, 0.1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1a1b1e;
+    --surface: #232428;
+    --surface-2: #2b2d32;
+    --text: #ededef;
+    --text-dim: #9a9ca3;
+    --border: #35373c;
+    --grid-line: rgba(237, 237, 239, 0.08);
+    --accent: #4fb3a0;
+    --accent-text: #0e1412;
+    --today: #ff5b4d;
+    --danger: #ff6b5e;
+    --danger-bg: rgba(255, 107, 94, 0.14);
+    --ok: #5fbf74;
+    --ok-bg: rgba(95, 191, 116, 0.14);
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: #1a1b1e;
+  --surface: #232428;
+  --surface-2: #2b2d32;
+  --text: #ededef;
+  --text-dim: #9a9ca3;
+  --border: #35373c;
+  --grid-line: rgba(237, 237, 239, 0.08);
+  --accent: #4fb3a0;
+  --accent-text: #0e1412;
+  --today: #ff5b4d;
+  --danger: #ff6b5e;
+  --danger-bg: rgba(255, 107, 94, 0.14);
+  --ok: #5fbf74;
+  --ok-bg: rgba(95, 191, 116, 0.14);
+}
+
+:root[data-theme="light"] {
+  --bg: #f5f4f1;
+  --surface: #ffffff;
+  --surface-2: #eceae6;
+  --text: #1c1d1f;
+  --text-dim: #6b6d72;
+  --border: #dedcd7;
+  --grid-line: rgba(28, 29, 31, 0.07);
+  --accent: #2e7d6b;
+  --accent-text: #ffffff;
+  --today: #e8483a;
+  --danger: #c6433a;
+  --danger-bg: rgba(198, 67, 58, 0.1);
+  --ok: #2f7a3d;
+  --ok-bg: rgba(47, 122, 61, 0.1);
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-text: var(--text);
+  --color-text-dim: var(--text-dim);
+  --color-border: var(--border);
+  --color-grid-line: var(--grid-line);
+  --color-accent: var(--accent);
+  --color-accent-text: var(--accent-text);
+  --color-today: var(--today);
+  --color-danger: var(--danger);
+  --color-danger-bg: var(--danger-bg);
+  --color-ok: var(--ok);
+  --color-ok-bg: var(--ok-bg);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+/* paleta fixa de cores para matérias/conteúdos de estudo */
+:root {
+  --palette-verde-musgo: #6b7a4a;
+  --palette-verde-claro: #8fbf6b;
+  --palette-azul-marinho: #24476b;
+  --palette-azul-claro: #5aa9e6;
+  --palette-laranja: #f2994a;
+  --palette-amarelo: #f2c94c;
+  --palette-vermelho: #eb5757;
+  --palette-rosa-choque: #ff3d9a;
+  --palette-roxo: #9b51e0;
+  --palette-cinza-avulso: #8a8d93;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+}
