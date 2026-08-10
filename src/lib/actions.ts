@@ -354,17 +354,20 @@ export async function deletePlanoAction(formData: FormData) {
 export async function createMateriaAction(formData: FormData) {
   const nome = String(formData.get("nome") ?? "").trim();
   const cor = String(formData.get("cor") ?? "").trim();
+  const voltarPara = String(formData.get("voltar_para") ?? "").trim() || null;
   if (!nome || !cor) throw new Error("Preencha nome e cor.");
 
   const supabase = await createClient();
   const { data: existente } = await supabase.from("materias").select("id").ilike("nome", nome).maybeSingle();
   if (existente) throw new Error("Já existe uma matéria com esse nome.");
 
-  const { error } = await supabase.from("materias").insert({ nome, cor });
-  if (error) throw new Error(error.message);
+  const { data: nova, error } = await supabase.from("materias").insert({ nome, cor }).select("id").single();
+  if (error || !nova) throw new Error(error?.message ?? "Não foi possível criar a matéria.");
 
   revalidatePath("/", "layout");
-  redirect("/materias");
+  // veio do "+ Nova matéria" de dentro de um formulário de conteúdo — volta pra lá,
+  // já com a matéria recém-criada selecionada
+  redirect(voltarPara ? `${voltarPara}?materia=${nova.id}` : "/materias");
 }
 
 export async function updateMateriaAction(formData: FormData) {

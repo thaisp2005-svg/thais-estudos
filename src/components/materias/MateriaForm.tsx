@@ -7,12 +7,20 @@ import { EVENT_PALETTE } from "@/lib/palette";
 
 export type MateriaInicial = { id: string; nome: string; cor: string };
 
-export function MateriaForm({ inicial }: { inicial?: MateriaInicial }) {
+export function MateriaForm({
+  inicial,
+  voltarPara,
+}: {
+  inicial?: MateriaInicial;
+  /** para onde voltar depois de criar (ex: veio do "+ Nova matéria" de dentro de Novo conteúdo) */
+  voltarPara?: string;
+}) {
   const editando = Boolean(inicial);
 
   return (
     <form action={editando ? updateMateriaAction : createMateriaAction} className="flex flex-col gap-4">
       {inicial && <input type="hidden" name="id" value={inicial.id} />}
+      {!editando && voltarPara && <input type="hidden" name="voltar_para" value={voltarPara} />}
 
       <Field label="Nome da matéria">
         <input

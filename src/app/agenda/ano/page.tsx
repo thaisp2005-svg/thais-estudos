@@ -2,14 +2,15 @@ import Link from "next/link";
 import { MiniMonth } from "@/components/agenda/MiniMonth";
 import { SeletorMesAno } from "@/components/agenda/SeletorMesAno";
 import { VistaSwitcher } from "@/components/agenda/VistaSwitcher";
-import { getMarcasDoAno } from "@/lib/data";
+import { MateriasLegend } from "@/components/agenda/MateriasLegend";
+import { getMarcasDoAno, getMateriasEmUso } from "@/lib/data";
 import { hojeParts, mesDeParams } from "@/lib/date";
 
 export default async function AgendaAnoPage({ searchParams }: PageProps<"/agenda/ano">) {
   const params = await searchParams;
   const hoje = hojeParts();
   const { ano } = mesDeParams({ ano: params.ano, mes: String(hoje.mes) });
-  const marcas = await getMarcasDoAno(ano);
+  const [marcas, materiasEmUso] = await Promise.all([getMarcasDoAno(ano), getMateriasEmUso()]);
   const noAnoAtual = ano === hoje.ano;
 
   const setaClass =
@@ -44,6 +45,8 @@ export default async function AgendaAnoPage({ searchParams }: PageProps<"/agenda
           <MiniMonth key={mes} ano={ano} mes={mes} marcas={marcas} />
         ))}
       </div>
+
+      <MateriasLegend materias={materiasEmUso} />
 
       <p className="mt-4 px-1 text-[13px] text-text-dim">
         O ponto embaixo do dia mostra que há algo marcado — vermelho quando tem revisão atrasada. Clique no nome

@@ -2,12 +2,13 @@ import Link from "next/link";
 import { MonthGrid } from "@/components/agenda/MonthGrid";
 import { SeletorMesAno } from "@/components/agenda/SeletorMesAno";
 import { VistaSwitcher } from "@/components/agenda/VistaSwitcher";
-import { getEventosDoMes } from "@/lib/data";
+import { MateriasLegend } from "@/components/agenda/MateriasLegend";
+import { getEventosDoMes, getMateriasEmUso } from "@/lib/data";
 import { hojeParts, mesAnterior, mesSeguinte, mesDeParams } from "@/lib/date";
 
 export default async function AgendaPage({ searchParams }: PageProps<"/agenda">) {
   const { ano, mes } = mesDeParams(await searchParams);
-  const eventosPorDia = await getEventosDoMes(ano, mes);
+  const [eventosPorDia, materiasEmUso] = await Promise.all([getEventosDoMes(ano, mes), getMateriasEmUso()]);
   const hoje = hojeParts();
   const anterior = mesAnterior(ano, mes);
   const seguinte = mesSeguinte(ano, mes);
@@ -57,6 +58,8 @@ export default async function AgendaPage({ searchParams }: PageProps<"/agenda">)
       <div className="rounded-2xl border border-border bg-surface">
         <MonthGrid ano={ano} mes={mes} eventosPorDia={eventosPorDia} />
       </div>
+
+      <MateriasLegend materias={materiasEmUso} />
 
       <p className="mt-4 px-1 text-[13px] text-text-dim">
         Toque em um dia para ver a lista de revisões, tarefas e compromissos.

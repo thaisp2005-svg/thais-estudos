@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { usePathname, useSearchParams } from "next/navigation";
 import { Field, inputClass } from "@/components/ui/Field";
 import { createConteudoAction, updateConteudoAction } from "@/lib/actions";
 import { hojeISO, rotuloIntervalo } from "@/lib/date";
@@ -27,9 +28,17 @@ export function ConteudoForm({
   materias: MateriaResumo[];
   inicial?: ConteudoInicial;
 }) {
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  // volta do "+ Nova matéria" já com ela selecionada
+  const materiaRecemCriada = searchParams.get("materia");
+
   const [planoId, setPlanoId] = useState(inicial?.plano_revisao_id ?? planos[0]?.id ?? "");
-  const [materiaId, setMateriaId] = useState(inicial?.materia_id ?? materias[0]?.id ?? "");
+  const [materiaId, setMateriaId] = useState(
+    materiaRecemCriada ?? inicial?.materia_id ?? materias[0]?.id ?? ""
+  );
   const editando = Boolean(inicial);
+  const novaMateriaHref = `/materias/novo?voltar_para=${encodeURIComponent(pathname)}`;
 
   return (
     <form action={editando ? updateConteudoAction : createConteudoAction} className="flex flex-col gap-4">
@@ -49,7 +58,7 @@ export function ConteudoForm({
       <Field label="Matéria">
         {materias.length === 0 ? (
           <Link
-            href="/materias/novo"
+            href={novaMateriaHref}
             className="block rounded-lg border border-dashed border-border bg-surface-2 px-2.5 py-2.5 text-center text-[13px] font-semibold text-accent"
           >
             + Cadastrar a primeira matéria
@@ -72,7 +81,7 @@ export function ConteudoForm({
               ))}
             </div>
             <input type="hidden" name="materia_id" value={materiaId} />
-            <Link href="/materias/novo" className="mt-1.5 inline-block text-[12px] font-bold text-accent">
+            <Link href={novaMateriaHref} className="mt-1.5 inline-block text-[12px] font-bold text-accent">
               + Nova matéria
             </Link>
           </>
