@@ -91,14 +91,32 @@ export const OPCOES_REPETICAO: { valor: Repeticao; rotulo: string }[] = [
  * a partir da data inicial. Cada ocorrência vira sua própria linha em `eventos`
  * (mesmo princípio das revisões de estudo) — não existe uma "regra" guardada,
  * então editar/excluir depois mexe só naquela ocorrência.
- * Limitado a 1 ano à frente e 200 ocorrências, por segurança.
+ * Sem uma data final escolhida, repete por até 1 ano à frente. Escolhendo uma
+ * data final, ela vale como limite (até no máximo 5 anos à frente, por
+ * segurança). Sempre limitado a 200 ocorrências.
  */
-export function gerarOcorrencias(dataInicialISO: string, repeticao: Repeticao, intervaloPersonalizadoDias?: number) {
+export function gerarOcorrencias(
+  dataInicialISO: string,
+  repeticao: Repeticao,
+  intervaloPersonalizadoDias?: number,
+  dataFimISO?: string
+) {
   if (repeticao === "nunca") return [dataInicialISO];
 
   const [ano, mes, dia] = dataInicialISO.split("-").map(Number);
   const cursor = new Date(Date.UTC(ano, mes - 1, dia));
-  const limite = new Date(Date.UTC(ano + 1, mes - 1, dia));
+  const limitePadrao = new Date(Date.UTC(ano + 1, mes - 1, dia));
+  const limiteMaximo = new Date(Date.UTC(ano + 5, mes - 1, dia));
+
+  let limite = limitePadrao;
+  if (dataFimISO) {
+    const [anoFim, mesFim, diaFim] = dataFimISO.split("-").map(Number);
+    const fimEscolhido = new Date(Date.UTC(anoFim, mesFim - 1, diaFim));
+    if (fimEscolhido > cursor) {
+      limite = fimEscolhido < limiteMaximo ? fimEscolhido : limiteMaximo;
+    }
+  }
+
   const MAX_OCORRENCIAS = 200;
 
   const datas: string[] = [];

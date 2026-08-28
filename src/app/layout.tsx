@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { AppShell } from "@/components/nav/AppShell";
 import { getTema } from "@/lib/data";
 
 const geistSans = Geist({
@@ -29,9 +28,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <body className="min-h-full bg-bg text-text">
-        <AppShell>{children}</AppShell>
-      </body>
+      <body className="min-h-full bg-bg text-text">{children}</body>
     </html>
   );
 }

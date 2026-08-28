@@ -91,7 +91,7 @@ export function EventoForm({ data, inicial }: { data: string; inicial?: EventoIn
       </div>
 
       {!editando && (
-        <Field label="Repete" hint="Cria uma ocorrência independente para cada data (até 1 ano à frente).">
+        <Field label="Repete" hint="Cria uma ocorrência independente para cada data.">
           <select
             name="repete"
             value={repete}
@@ -117,6 +117,12 @@ export function EventoForm({ data, inicial }: { data: string; inicial?: EventoIn
               <span className="text-[12.5px] text-text-dim">dia(s)</span>
             </div>
           )}
+        </Field>
+      )}
+
+      {!editando && repete !== "nunca" && (
+        <Field label="Repete até" hint="Deixe em branco para repetir por até 1 ano a partir da data inicial.">
+          <input type="date" name="repete_ate" min={inicial?.data ?? data} className={inputClass} />
         </Field>
       )}
 

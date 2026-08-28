@@ -2,8 +2,10 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { somarDias, rotuloIntervalo, gerarOcorrencias, type Repeticao } from "@/lib/date";
+import { COOKIE_ACESSO } from "@/lib/auth";
 import type { Tema } from "@/lib/supabase/types";
 
 type Supabase = Awaited<ReturnType<typeof createClient>>;
@@ -215,13 +217,14 @@ export async function createCompromissoAction(formData: FormData) {
   const observacoes = String(formData.get("observacoes") ?? "").trim() || null;
   const repete = (String(formData.get("repete") ?? "nunca") || "nunca") as Repeticao;
   const intervaloPersonalizado = Number(formData.get("intervalo_personalizado") ?? 0) || undefined;
+  const repeteAte = String(formData.get("repete_ate") ?? "").trim() || undefined;
 
   if (!titulo || !data || (tipo !== "tarefa" && tipo !== "compromisso")) {
     throw new Error("Preencha os campos obrigatórios.");
   }
 
   const supabase = await createClient();
-  const datas = gerarOcorrencias(data, repete, intervaloPersonalizado);
+  const datas = gerarOcorrencias(data, repete, intervaloPersonalizado, repeteAte);
   const linhas = datas.map((d) => ({
     tipo,
     titulo,
@@ -415,4 +418,25 @@ export async function setTemaAction(tema: Tema) {
   if (error) throw new Error(error.message);
 
   revalidatePath("/", "layout");
+}
+
+// ---------------------------------------------------------------------- acesso
+
+export async function entrarAction(formData: FormData) {
+  const senha = String(formData.get("senha") ?? "");
+  const redirectPara = String(formData.get("redirect") ?? "/") || "/";
+
+  if (!process.env.APP_SENHA || senha !== process.env.APP_SENHA) {
+    redirect(`/entrar?erro=1&redirect=${encodeURIComponent(redirectPara)}`);
+  }
+
+  (await cookies()).set(COOKIE_ACESSO, process.env.APP_SENHA, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    path: "/",
+    maxAge: 60 * 60 * 24 * 180,
+  });
+
+  redirect(redirectPara);
 }

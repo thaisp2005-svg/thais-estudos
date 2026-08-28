@@ -1,29 +1,14 @@
-import { createServerClient } from "@supabase/ssr";
-import { cookies } from "next/headers";
+import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/lib/supabase/types";
 
+/**
+ * Cliente do servidor, usando a chave service_role: ignora as políticas de
+ * RLS (o banco está fechado para qualquer outra chave, inclusive a anon).
+ * Nunca importar isto de um componente/arquivo que roda no navegador.
+ */
 export async function createClient() {
-  const cookieStore = await cookies();
-
-  return createServerClient<Database>(
+  return createSupabaseClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return cookieStore.getAll();
-        },
-        setAll(cookiesToSet) {
-          try {
-            cookiesToSet.forEach(({ name, value, options }) =>
-              cookieStore.set(name, value, options)
-            );
-          } catch {
-            // chamado a partir de um Server Component sem permissão de escrita;
-            // ignorado porque o middleware cuida da renovação de sessão.
-          }
-        },
-      },
-    }
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
   );
 }
