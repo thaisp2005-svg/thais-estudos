@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Suspense } from "react";
 import { ConteudoForm } from "@/components/estudos/ConteudoForm";
 import { getPlanosRevisao, getMaterias } from "@/lib/data";
 
@@ -14,7 +15,9 @@ export default async function NovoConteudoPage() {
       <p className="mb-5 mt-1 text-xs text-text-dim">
         As revisões são geradas automaticamente a partir do plano escolhido.
       </p>
-      <ConteudoForm planos={planos} materias={materias} />
+      <Suspense fallback={null}>
+        <ConteudoForm planos={planos} materias={materias} />
+      </Suspense>
     </div>
   );
 }

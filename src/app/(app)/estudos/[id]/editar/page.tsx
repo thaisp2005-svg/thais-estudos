@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { getConteudoDetalhe, getPlanosRevisao, getMaterias } from "@/lib/data";
 import { ConteudoForm } from "@/components/estudos/ConteudoForm";
@@ -22,18 +23,20 @@ export default async function EditarConteudoPage({ params }: PageProps<"/estudos
       </Link>
       <h1 className="mb-5 mt-2 text-lg font-bold">Editar conteúdo</h1>
 
-      <ConteudoForm
-        planos={planos}
-        materias={materias}
-        inicial={{
-          id: conteudo.id,
-          titulo: conteudo.titulo,
-          materia_id: conteudo.materia_id ?? "",
-          observacoes: conteudo.observacoes,
-          data_inicial: conteudo.data_inicial,
-          plano_revisao_id: conteudo.plano_revisao_id,
-        }}
-      />
+      <Suspense fallback={null}>
+        <ConteudoForm
+          planos={planos}
+          materias={materias}
+          inicial={{
+            id: conteudo.id,
+            titulo: conteudo.titulo,
+            materia_id: conteudo.materia_id ?? "",
+            observacoes: conteudo.observacoes,
+            data_inicial: conteudo.data_inicial,
+            plano_revisao_id: conteudo.plano_revisao_id,
+          }}
+        />
+      </Suspense>
 
       <form action={deleteConteudoAction} className="mt-8 border-t border-border pt-5">
         <input type="hidden" name="id" value={conteudo.id} />
